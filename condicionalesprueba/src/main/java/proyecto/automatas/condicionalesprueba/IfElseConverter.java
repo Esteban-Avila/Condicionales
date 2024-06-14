@@ -185,9 +185,10 @@ public class IfElseConverter {
         matcher.appendTail(sb);
 
         String result = sb.toString();
-        result = result.replace("SI ", "if");
-        result = result.replace("ENTONCES:", "{");
+        result = result.replace("SI ", "if (");
+        result = result.replace("ENTONCES:", ") {");
         result = result.replace("SINO:", "} else {");
+        result = result.replace("SINO", "} else if (");
         result = result.replace("FINSI", "}");
 
         return result;
