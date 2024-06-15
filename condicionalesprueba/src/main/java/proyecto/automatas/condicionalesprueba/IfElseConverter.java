@@ -8,30 +8,20 @@ import java.util.regex.Pattern;
 
 /**
  *
- * @author Usuario
+ * @author Esteban Avila; Carlos Doria; Viviana Prasca; Camilo Puello; Arnol López. 
  */
 public class IfElseConverter {
 
-    private static int placeholderCount = 0;
-    private static Map<String, String> textPlaceholders = new HashMap<>();
+    private  int placeholderCount = 0;
+    private  Map<String, String> textPlaceholders = new HashMap<>();
 
-    public static String convertToCpp(String pseudocode) {
+    public String convertToCpp(String pseudocode) {
         pseudocode = protectQuotedText(pseudocode);
 
         String oldPseudocode;
         do {
             oldPseudocode = pseudocode;
-            
             pseudocode = convertSwitchCase(pseudocode);
-            //pseudocode = convertIfElseVarius(pseudocode);
-            //pseudocode = convertIfElseNested(pseudocode)
-            /*if (containsNestedIf(pseudocode)) {
-                pseudocode = convertIfElseNested(pseudocode);
-            } else if (containsMultipleElse(pseudocode)) {
-                pseudocode = convertIfElseVarius(pseudocode);
-            } else {
-                pseudocode = convertIfElse(pseudocode);
-            }*/
             if (containsSwitchCase(pseudocode)) {
                 pseudocode = convertSwitchCase(pseudocode);
             }
@@ -40,34 +30,34 @@ public class IfElseConverter {
             }
             if (containsMultipleElse(pseudocode)) {
                 pseudocode = convertIfElseVarius(pseudocode);
-            } else {
+             } else {
                 pseudocode = convertIfElse(pseudocode);
-            }
+            } 
         } while (!pseudocode.equals(oldPseudocode));
 
         pseudocode = restoreQuotedText(pseudocode);
         return pseudocode;
     }
 
-    private static boolean containsNestedIf(String pseudocode) {
+        private  boolean containsNestedIf(String pseudocode) {
         Pattern pattern = Pattern.compile("SI\\s*([^ENTONCES:]+)\\s*ENTONCES:\\s*.*SI\\s*([^ENTONCES:]+)", Pattern.DOTALL);
         Matcher matcher = pattern.matcher(pseudocode);
         return matcher.find();
     }
 
-    private static boolean containsMultipleElse(String pseudocode) {
+    private  boolean containsMultipleElse(String pseudocode) {
         Pattern pattern = Pattern.compile("SINO\\s*([^ENTONCES:]+)", Pattern.DOTALL);
         Matcher matcher = pattern.matcher(pseudocode);
         return matcher.find();
     }
 
-    private static boolean containsSwitchCase(String pseudocode) {
-        Pattern pattern = Pattern.compile("SEGUN\\s*(\\w+)\\s*HACER", Pattern.DOTALL);
+    private  boolean containsSwitchCase(String pseudocode) {
+        Pattern pattern = Pattern.compile("SEGUN\\s*([^HACER:]+)\\s*HACER:", Pattern.DOTALL);
         Matcher matcher = pattern.matcher(pseudocode);
         return matcher.find();
     }
         
-    private static String protectQuotedText(String pseudocode) {
+    private  String protectQuotedText(String pseudocode) {
         Pattern pattern = Pattern.compile("\"([^\"]*)\"");
         Matcher matcher = pattern.matcher(pseudocode);
         StringBuffer sb = new StringBuffer();
@@ -91,14 +81,14 @@ public class IfElseConverter {
         return pseudocode;
     }
 
-    private static String restoreQuotedText(String pseudocode) {
+    private  String restoreQuotedText(String pseudocode) {
         for (Map.Entry<String, String> entry : textPlaceholders.entrySet()) {
             pseudocode = pseudocode.replace(entry.getKey(), entry.getValue());
         }
         return pseudocode;
     }
 //este solo puede hacer if con un solo else
-   private static String convertIfElse(String pseudocode) {
+   private  String convertIfElse(String pseudocode) {
 
         Pattern pattern = Pattern.compile("(?sm)SI\\s*([^ENTONCES:]+)\\s*ENTONCES:\\s*(.*?)\\s*(SINO:\\s*(.*?)\\s*)?FINSI");
         Matcher matcher = pattern.matcher(pseudocode);
@@ -119,7 +109,7 @@ public class IfElseConverter {
         return sb.toString();
     }
    
-    public static String convertIfElseVarius(String pseudocode) {
+    private  String convertIfElseVarius(String pseudocode) {
         Pattern pattern = Pattern.compile("SI\\s*([^ENTONCES:]+)\\s*ENTONCES:\\s*(.?)\\s(SINO\\s*([^ENTONCES:]+)\\s*ENTONCES:\\s*(.?))*SINO:\\s(.*?)\\s*FINSI", Pattern.DOTALL);
         Matcher matcher = pattern.matcher(pseudocode);
         StringBuffer sb = new StringBuffer();
@@ -155,7 +145,7 @@ public class IfElseConverter {
         return sb.toString();
 }
     
-    private static String convertIfElseNested(String pseudocode) {
+    private String convertIfElseNested(String pseudocode) {
         Pattern pattern = Pattern.compile(
             "SI\\s*([^ENTONCES:]+)\\s*ENTONCES:\\s*([^SINO])(SINO:\\s([^FINSI]*))?\\s*FINSI", 
             Pattern.DOTALL
@@ -193,8 +183,9 @@ public class IfElseConverter {
         return result;
     }
 
+
     
-    public static String convertSwitchCase(String pseudocode) {
+    private String convertSwitchCase(String pseudocode) {
         // Dividir la entrada en líneas
         String[] lines = pseudocode.split("\n");
         
