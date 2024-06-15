@@ -11,7 +11,7 @@ import java.util.Scanner;
  */
 public class Condicionalesprueba {
 
-    public static void main(String[] args) {
+        public static void main(String[] args) {
         final JFileChooser fc= new JFileChooser();
        int response = fc.showOpenDialog(null);
        if (response ==JFileChooser.APPROVE_OPTION){
@@ -23,7 +23,9 @@ public class Condicionalesprueba {
             contents= contents + scanner.nextLine();
             contents+= "\n";
         }
-        String convertedCode = IfElseConverter.convertToCpp(LogicalOperators.convertToCpp(contents));
+        IfElseConverter a = new IfElseConverter();
+        LogicalOperators n = new LogicalOperators();
+        String convertedCode = a.convertToCpp(n.convertToCpp(contents));
         scanner.close();
         System.out.println(convertedCode );
         } catch(FileNotFoundException e){ 
