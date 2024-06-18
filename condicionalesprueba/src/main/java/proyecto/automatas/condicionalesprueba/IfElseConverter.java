@@ -21,7 +21,6 @@ public class IfElseConverter {
         String oldPseudocode;
         do {
             oldPseudocode = pseudocode;
-            pseudocode = convertSwitchCase(pseudocode);
             if (containsSwitchCase(pseudocode)) {
                 pseudocode = convertSwitchCase(pseudocode);
             }
